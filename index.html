@@ -2,213 +2,280 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YarBank | Neon Control</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YarBank Aero</title>
     <style>
         :root {
-            --bg: #000000;
-            --surface: #0a0a0c;
-            --accent: #00f2ff; 
-            --text: #ffffff;
-            --border: rgba(0, 242, 255, 0.2);
-            --danger: #ff0055; 
-            --money: #00ff88; 
+            --aero-bg: rgba(255, 255, 255, 0.12);
+            --aero-border: rgba(255, 255, 255, 0.2);
+            --accent-blue: #00d2ff;
+            --text-color: #ffffff;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            padding: 20px;
+        body {
+            background: radial-gradient(circle at top right, #2b2d42, #1a1a2e);
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
+            margin: 0;
         }
 
-        header {
+        .glass-panel {
+            background: var(--aero-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--aero-border);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            width: 480px;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 30px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.3s;
+            border-radius: 10px;
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 10px rgba(0,210,255,0.2);
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+
+        /* Кредитный интерфейс */
+        .credit-step { display: none; flex-direction: column; gap: 15px; }
+        .credit-step.active { display: flex; }
+
+        input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--aero-border);
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+        }
+
+        .action-btn {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,210,255,0.3); }
+
+        /* Контакты и Корпорация */
+        .corp-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-        .brand { font-family: 'Orbitron', sans-serif; font-weight: 800; color: var(--accent); letter-spacing: 3px; font-size: 1.1rem; text-shadow: 0 0 10px var(--accent); }
-        .status { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--money); }
-
-        /* ГЛАВНАЯ КАРТОЧКА */
-        .neon-card {
-            background: var(--surface);
-            border: 2px solid var(--accent);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
-            position: relative;
-        }
-        .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.5; margin-bottom: 8px; display: block; }
-        .balance { font-family: 'Orbitron', sans-serif; font-size: 2.6rem; font-weight: 700; color: var(--money); text-shadow: 0 0 10px var(--money); }
-
-        /* СЕКЦИИ */
-        h2 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 15px; color: var(--accent); display: flex; align-items: center; }
-        h2::before { content: '>'; margin-right: 8px; color: var(--accent); }
-        section { margin-bottom: 30px; }
-
-        /* ЛЮДИ */
-        .people-grid { display: flex; gap: 12px; overflow-x: auto; padding: 5px; }
-        .person-pill {
-            min-width: 65px; height: 65px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 1.3rem;
-            cursor: pointer; transition: 0.3s;
-        }
-        .person-pill:active { transform: scale(0.9); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
-
-        /* СПИСКИ */
-        .neon-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            overflow: hidden;
-        }
-        .list-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-        }
-        .list-row:last-child { border-bottom: none; }
-        .info p { font-size: 0.85rem; font-weight: 700; }
-        .info span { font-size: 0.6rem; opacity: 0.4; text-transform: uppercase; }
-
-        /* КНОПКИ */
-        .btn-mini {
-            background: none;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.6rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
+            background: rgba(0, 210, 255, 0.05);
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
         }
 
-        .footer-tools {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+        .pin-display {
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+            text-align: center;
+            letter-spacing: 5px;
+            font-size: 18px;
+            margin-top: 20px;
         }
-        .btn-neon {
-            padding: 18px; border-radius: 16px; border: 2px solid var(--accent);
-            font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 0.7rem; text-transform: uppercase;
-            cursor: pointer; background: none; color: var(--accent);
-        }
-        .btn-fill { background: var(--accent); color: #000; border: none; }
-
-        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="brand">YARBANK</div>
-        <div class="status">System Online</div>
-    </header>
-
-    <div class="neon-card">
-        <span class="label">Yar Assets Score</span>
-        <div class="balance" id="val-bal">0</div>
-    </div>
-
-    <section>
-        <h2>Пользователи</h2>
-        <div class="people-grid" id="list-users">
-            <div class="person-pill" onclick="addUser()" style="border-style: dashed; opacity: 0.3;">+</div>
+    <div class="glass-panel">
+        <div class="header">
+            <h1>YarBank</h1>
+            <div style="font-size: 11px; opacity: 0.6; margin-top: 5px;">AERO INTERFACE v.2026.08</div>
         </div>
-    </section>
 
-    <section>
-        <h2>Корпорации</h2>
-        <div class="neon-box" id="list-corps">
-            <div style="padding: 20px; text-align: center; font-size: 0.7rem; opacity: 0.2;">EMPTY_DATABASE</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('main')">Счета</button>
+            <button class="tab-btn" onclick="openTab('history')">История</button>
+            <button class="tab-btn" onclick="openTab('credits')">Кредиты</button>
+            <button class="tab-btn" onclick="openTab('corp')">Корпорация</button>
         </div>
-        <button class="btn-neon" style="width: 100%; margin-top: 12px; padding: 10px; font-size: 0.6rem;" onclick="addCorp()">+ Добавить Компанию</button>
-    </section>
 
-    <section>
-        <h2>Логи YarBank</h2>
-        <div class="neon-box" id="list-logs">
-            <div style="padding: 20px; text-align: center; font-size: 0.7rem; opacity: 0.2;">LOGS_NOT_FOUND</div>
+        <div class="content-area">
+            <div id="main" class="tab-content active">
+                <div class="card">
+                    <span style="opacity: 0.7; font-size: 14px;">Доступный остаток</span>
+                    <h2 id="balance">850 400 ₽</h2>
+                </div>
+                <div class="card" style="border-left: 3px solid #00d2ff;">
+                    <strong>Статус системы:</strong> Активен<br>
+                    <small>Все протоколы YarCorp защищены</small>
+                </div>
+            </div>
+
+            <div id="history" class="tab-content">
+                <h3>История операций</h3>
+                <div id="history-list">
+                    <div class="history-item"><span>Лицензия ПО</span> <span>-4 500 ₽</span></div>
+                    <div class="history-item"><span>Пополнение YarCorp</span> <span style="color: #00ff88;">+120 000 ₽</span></div>
+                    <div class="history-item"><span>Хостинг Banana</span> <span>-1 200 ₽</span></div>
+                </div>
+            </div>
+
+            <div id="credits" class="tab-content">
+                <h3>Новый кредит</h3>
+                
+                <div id="step1" class="credit-step active">
+                    <label>На какую цель берете кредит?</label>
+                    <input type="text" id="credit-goal" placeholder="Напр: Закупка видеокарт">
+                    <button class="action-btn" onclick="nextStep(2)">Далее</button>
+                </div>
+
+                <div id="step2" class="credit-step">
+                    <label>Название кредита:</label>
+                    <input type="text" id="credit-name" placeholder="Напр: Развитие-2026">
+                    <button class="action-btn" onclick="nextStep(3)">Далее</button>
+                </div>
+
+                <div id="step3" class="credit-step">
+                    <label>Сумма кредита (₽):</label>
+                    <input type="number" id="credit-amount" placeholder="0.00">
+                    <button class="action-btn" onclick="finishCredit()">Подтвердить</button>
+                </div>
+
+                <div id="credit-success" style="display:none; text-align: center; color: #00ff88;">
+                    <h4>Заявка одобрена!</h4>
+                    <p>Средства зачислены на основной счет.</p>
+                </div>
+            </div>
+
+            <div id="corp" class="tab-content">
+                <h3>Моя Корпорация</h3>
+                <div class="card">
+                    <label>Добавить подразделение/контакт:</label>
+                    <div style="display: flex; gap: 5px; margin-top: 10px;">
+                        <input type="text" id="new-corp-name" placeholder="Название" style="flex: 2;">
+                        <button class="action-btn" onclick="addCorpItem()" style="padding: 5px 15px;">+</button>
+                    </div>
+                </div>
+                
+                <div id="corp-list">
+                    <div class="corp-item"><span>YarCorp HQ</span></div>
+                </div>
+
+                <div class="pin-display">
+                    <small style="display:block; font-size: 10px; opacity: 0.5; letter-spacing: 1px;">ПИН-КОДЫ ДОСТУПА</small>
+                    2026 | 2807 | 2907 | 3008
+                </div>
+            </div>
         </div>
-    </section>
-
-    <div class="footer-tools">
-        <button class="btn-neon btn-fill" onclick="deposit()">Зачислить</button>
-        <button class="btn-neon" onclick="location.reload()">Сбросить</button>
     </div>
 
     <script>
-        let score = 0;
-        let users = [];
-        let corps = [];
-        let logs = [];
-
-        function sync() {
-            document.getElementById('val-bal').innerText = score.toLocaleString();
-            const uHtml = users.map(u => `<div class="person-pill" onclick="send('${u.n}')">${u.n[0]}</div>`).join('');
-            document.getElementById('list-users').innerHTML = `<div class="person-pill" onclick="addUser()" style="border-style: dashed; opacity: 0.3;">+</div>` + uHtml;
-
-            if(corps.length > 0) {
-                document.getElementById('list-corps').innerHTML = corps.map(c => `
-                    <div class="list-row">
-                        <div class="info"><p>${c.n}</p><span>Corp Member</span></div>
-                        <button class="btn-mini" onclick="send('${c.n}')">Перевод</button>
-                    </div>
-                `).join('');
-            }
-
-            if(logs.length > 0) {
-                document.getElementById('list-logs').innerHTML = logs.slice(-5).reverse().map(l => `
-                    <div class="list-row">
-                        <div class="info"><p>${l.to}</p><span>${l.type}</span></div>
-                        <div style="font-family: 'Orbitron'; font-size: 0.8rem; color: ${l.v > 0 ? 'var(--money)' : 'var(--danger)'}">
-                            ${l.v > 0 ? '+' : ''}${l.v}
-                        </div>
-                    </div>
-                `).join('');
-            }
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        function deposit() {
-            let a = prompt("Количество единиц:");
-            if(a && !isNaN(a)) {
-                score += parseInt(a);
-                logs.push({to: 'YAR_INCOME', type: 'ЗАЧИСЛЕНИЕ', v: parseInt(a)});
-                sync();
-            }
+        function nextStep(step) {
+            document.querySelectorAll('.credit-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
         }
 
-        function addUser() {
-            let n = prompt("Имя пользователя:");
-            if(n) { users.push({n}); sync(); }
+        function finishCredit() {
+            const goal = document.getElementById('credit-goal').value;
+            const name = document.getElementById('credit-name').value;
+            const amount = document.getElementById('credit-amount').value;
+
+            if(!amount) return alert("Введите сумму");
+
+            const historyList = document.getElementById('history-list');
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.innerHTML = `<span>[Кредит] ${name}</span> <span style="color: #00ff88;">+${amount} ₽</span>`;
+            historyList.prepend(item);
+
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('credit-success').style.display = 'block';
+            
+            // Обновление баланса (визуально для имитации)
+            const currentBal = parseInt(document.getElementById('balance').innerText.replace(/\s/g, ''));
+            document.getElementById('balance').innerText = (currentBal + parseInt(amount)).toLocaleString() + " ₽";
         }
 
-        function addCorp() {
-            let n = prompt("Название компании:");
-            if(n) { corps.push({n}); sync(); }
-        }
+        function addCorpItem() {
+            const name = document.getElementById('new-corp-name').value;
+            if(!name) return;
 
-        function send(target) {
-            let a = prompt(`Сколько отправить для ${target}?`);
-            if(a && score >= parseInt(a)) {
-                score -= parseInt(a);
-                logs.push({to: target, type: 'ПЕРЕВОД', v: -parseInt(a)});
-                sync();
-            } else { alert("ОШИБКА: Мало юнитов"); }
+            const list = document.getElementById('corp-list');
+            const div = document.createElement('div');
+            div.className = 'corp-item';
+            div.innerHTML = `<span>${name}</span> <span style="font-size: 10px; color: #00d2ff;">ACTIVE</span>`;
+            list.appendChild(div);
+            document.getElementById('new-corp-name').value = '';
         }
-
-        sync();
     </script>
 </body>
 </html>
