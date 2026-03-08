@@ -1,208 +1,80 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YarBank | Raw System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #FFFFFF;
-            --accent: #00FF41; /* Кибер-зеленый вместо желтого для жесткости */
-            --main: #000000;
-            --shadow: 6px 6px 0px #000000;
-            --shadow-active: 2px 2px 0px #000000;
-        }
+<style>
+    .insight-card {
+        padding: 15px;
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+    }
+    .insight-header {
+        font-size: 0.5rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--accent);
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+    }
+    .insight-text {
+        font-size: 0.75rem;
+        line-height: 1.4;
+        font-weight: 400;
+        opacity: 0.8;
+    }
+    .market-mini {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        font-family: 'JetBrains Mono';
+        font-size: 0.6rem;
+    }
+    .market-mini span { opacity: 0.6; }
+    .market-mini b { color: var(--accent); font-weight: 500; }
+</style>
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Lexend Mega', sans-serif; 
-            background: var(--bg); 
-            color: var(--main); 
-            padding: 20px;
-        }
-
-        header {
-            border-bottom: 5px solid var(--main);
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .logo { font-size: 1.2rem; text-transform: uppercase; }
-
-        /* ГЛАВНЫЙ БАЛАНС */
-        .box-assets {
-            background: var(--main);
-            color: var(--bg);
-            padding: 30px 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 35px;
-        }
-        .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; }
-        .value { font-family: 'Space Mono', monospace; font-size: 3rem; word-break: break-all; }
-
-        /* СЕКЦИИ */
-        section { margin-bottom: 30px; }
-        h2 {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            border: 3px solid var(--main);
-            display: inline-block;
-            padding: 4px 12px;
-            background: var(--accent);
-            margin-bottom: 15px;
-            box-shadow: 3px 3px 0px var(--main);
-        }
-
-        /* КОНТАКТЫ */
-        .scroller { display: flex; gap: 12px; overflow-x: auto; padding: 5px; }
-        .circle-btn {
-            min-width: 65px; height: 65px;
-            border: 4px solid var(--main);
-            background: var(--bg);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; font-weight: 800;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-        }
-        .circle-btn:active { transform: translate(3px, 3px); box-shadow: var(--shadow-active); }
-
-        /* ТАБЛИЦЫ */
-        .data-table { border: 4px solid var(--main); box-shadow: var(--shadow); background: var(--bg); }
-        .data-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px; border-bottom: 4px solid var(--main);
-            font-family: 'Space Mono', monospace; font-weight: 700;
-        }
-        .data-row:last-child { border-bottom: none; }
-
-        /* КНОПКИ */
-        .action-btn {
-            background: var(--main); color: var(--bg);
-            border: none; padding: 8px 15px;
-            text-transform: uppercase; font-size: 0.6rem; font-family: 'Lexend Mega';
-            cursor: pointer;
-        }
-        
-        .footer-nav {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;
-        }
-        .big-btn {
-            padding: 20px; border: 4px solid var(--main);
-            font-weight: 800; text-transform: uppercase;
-            box-shadow: var(--shadow); background: var(--bg);
-            text-align: center; cursor: pointer;
-        }
-        .big-btn:active { transform: translate(4px, 4px); box-shadow: var(--shadow-active); }
-        .green { background: var(--accent); }
-
-        ::-webkit-scrollbar { display: none; }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="logo">YarBank // System</div>
-        <div style="font-size: 0.8rem;">[v.1.0]</div>
-    </header>
-
-    <div class="box-assets">
-        <span class="label">Total Score / Assets</span>
-        <div class="value" id="bal">0</div>
+<div class="aero insight-card">
+    <div class="insight-header">
+        <span style="margin-right:8px">💡</span> AERO INSIGHT
     </div>
-
-    <section>
-        <h2>Users</h2>
-        <div class="scroller" id="user-list">
-            <div class="circle-btn" onclick="addUser()">+</div>
-        </div>
-    </section>
-
-    <section>
-        <h2>Corps</h2>
-        <div class="data-table" id="corp-list">
-            <div style="padding: 20px; text-align: center; opacity: 0.2; font-size: 0.6rem;">NO_DATA_FOUND</div>
-        </div>
-        <div class="big-btn" style="margin-top: 15px; font-size: 0.6rem; padding: 10px;" onclick="addCorp()">+ Reg Corporation</div>
-    </section>
-
-    <section>
-        <h2>Logs</h2>
-        <div class="data-table" id="logs">
-            <div style="padding: 20px; text-align: center; opacity: 0.2; font-size: 0.6rem;">HISTORY_CLEAN</div>
-        </div>
-    </section>
-
-    <div class="footer-nav">
-        <div class="big-btn green" onclick="topUp()">Add Units</div>
-        <div class="big-btn" onclick="location.reload()">Reset</div>
+    <div class="insight-text" id="fact-text">
+        Загрузка анализа данных...
     </div>
+    <div class="market-mini">
+        <span>USD/RUB <b id="rate-usd">0.00</b></span>
+        <span>BTC/USD <b id="rate-btc">0.00</b></span>
+        <span>AERO/COIN <b style="color:#7000ff">1.04</b></span>
+    </div>
+</div>
 
-    <script>
-        let score = 0;
-        let users = [];
-        let corps = [];
-        let logs = [];
+<script>
+    // 1. Добавь массив фактов в начало скрипта
+    const aeroFacts = [
+        "90% мировых денег существуют только на серверах в цифровом виде.",
+        "Первый банкомат был установлен в Лондоне в 1967 году.",
+        "Инвестиция в знания всегда приносит самые высокие проценты.",
+        "Слово 'банк' происходит от итальянского 'banco' (скамья).",
+        "Самая тяжелая монета в мире весила более одной тонны.",
+        "Биткоин-пицца: в 2010 году 2 пиццы купили за 10,000 BTC."
+    ];
 
-        function sync() {
-            document.getElementById('bal').innerText = score;
-            
-            // Users
-            const uHtml = users.map(u => `<div class="circle-btn" onclick="send('${u.n}')">${u.n[0]}</div>`).join('');
-            document.getElementById('user-list').innerHTML = `<div class="circle-btn" onclick="addUser()">+</div>` + uHtml;
+    // 2. Обнови функцию init(), чтобы она вызывала новые данные
+    function init() {
+        updateBalanceDisplay(true);
+        renderContacts();
+        renderHistory();
+        updateInsights(); // Добавляем вызов инсайтов
+    }
 
-            // Corps
-            if(corps.length > 0) {
-                document.getElementById('corp-list').innerHTML = corps.map(c => `
-                    <div class="data-row">
-                        <span>${c.n}</span>
-                        <button class="action-btn" onclick="send('${c.n}')">Transfer</button>
-                    </div>
-                `).join('');
-            }
+    // 3. Добавь саму функцию обновления инсайтов
+    function updateInsights() {
+        // Случайный факт
+        const randomFact = aeroFacts[Math.floor(Math.random() * aeroFacts.length)];
+        document.getElementById('fact-text').innerText = randomFact;
 
-            // Logs
-            if(logs.length > 0) {
-                document.getElementById('logs').innerHTML = logs.slice(-4).reverse().map(l => `
-                    <div class="data-row" style="font-size: 0.7rem; background: ${l.v > 0 ? '#ccffcc' : '#ffcccc'}">
-                        <span>${l.t}</span>
-                        <span>${l.v > 0 ? '+' : ''}${l.v}</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function topUp() {
-            let a = prompt("Units to add:");
-            if(a && !isNaN(a)) {
-                score += parseInt(a);
-                logs.push({t: 'DEPOSIT', v: parseInt(a)});
-                sync();
-            }
-        }
-
-        function addUser() {
-            let n = prompt("Username:");
-            if(n) { users.push({n}); sync(); }
-        }
-
-        function addCorp() {
-            let n = prompt("Corporation Name:");
-            if(n) { corps.push({n}); sync(); }
-        }
-
-        function send(target) {
-            let a = prompt(`Amount to ${target}:`);
-            if(a && score >= parseInt(a)) {
-                score -= parseInt(a);
-                logs.push({t: target.toUpperCase(), v: -parseInt(a)});
-                sync();
-            } else { alert("ACCESS_DENIED: Low Units"); }
-        }
-
-        sync();
-    </script>
-</body>
-</html>
+        // Имитация живых курсов
+        document.getElementById('rate-usd').innerText = (90 + Math.random() * 5).toFixed(2);
+        document.getElementById('rate-btc').innerText = (64000 + Math.random() * 1000).toLocaleString();
+    }
+</script>
